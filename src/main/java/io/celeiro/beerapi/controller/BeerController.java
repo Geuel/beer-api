@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class BeerController {
 
-    private final BeerService beerService;
+    private BeerService beerService;
 
     @GetMapping
     public List<BeerDTO> listAll() {
