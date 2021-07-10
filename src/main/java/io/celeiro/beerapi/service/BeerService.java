@@ -2,6 +2,7 @@ package io.celeiro.beerapi.service;
 
 import io.celeiro.beerapi.dto.BeerDTO;
 import io.celeiro.beerapi.entities.Beer;
+import io.celeiro.beerapi.exception.BeerNotFoundException;
 import io.celeiro.beerapi.mapper.BeerMapper;
 import io.celeiro.beerapi.repositories.BeerRepository;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,9 +28,20 @@ public class BeerService {
              .collect(Collectors.toList());
     }
 
+    public BeerDTO findById(Long id) throws BeerNotFoundException {
+        Beer beer = verifyIfExists(id);
+
+        return beerMapper.toDTO(beer);
+    }
+
     public BeerDTO insert(BeerDTO beerDTO) {
         Beer beerToSave = beerMapper.toModel(beerDTO);
         Beer savedBeer = beerRepository.save(beerToSave);
         return beerMapper.toDTO(savedBeer);
+    }
+
+    private Beer verifyIfExists(Long id) throws BeerNotFoundException {
+        return beerRepository.findById(id)
+                .orElseThrow(() -> new BeerNotFoundException(id));
     }
 }
