@@ -2,6 +2,7 @@ package io.celeiro.beerapi.service;
 
 import io.celeiro.beerapi.dto.BeerDTO;
 import io.celeiro.beerapi.entities.Beer;
+import io.celeiro.beerapi.exception.BeerAlreadyRegisteredException;
 import io.celeiro.beerapi.exception.BeerNotFoundException;
 import io.celeiro.beerapi.mapper.BeerMapper;
 import io.celeiro.beerapi.repositories.BeerRepository;
@@ -40,7 +41,7 @@ public class BeerService {
         return beerMapper.toDTO(foundBeer);
     }
 
-    public BeerDTO insert(BeerDTO beerDTO) {
+    public BeerDTO insert(BeerDTO beerDTO) throws BeerAlreadyRegisteredException {
         Beer beerToSave = beerMapper.toModel(beerDTO);
         Beer savedBeer = beerRepository.save(beerToSave);
         return beerMapper.toDTO(savedBeer);

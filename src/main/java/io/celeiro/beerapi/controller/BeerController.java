@@ -1,6 +1,7 @@
 package io.celeiro.beerapi.controller;
 
 import io.celeiro.beerapi.dto.BeerDTO;
+import io.celeiro.beerapi.exception.BeerAlreadyRegisteredException;
 import io.celeiro.beerapi.exception.BeerNotFoundException;
 import io.celeiro.beerapi.service.BeerService;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class BeerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BeerDTO insert(@RequestBody @Valid BeerDTO beerDTO) {
+    public BeerDTO insert(@RequestBody @Valid BeerDTO beerDTO) throws BeerAlreadyRegisteredException {
         return beerService.insert(beerDTO);
     }
 
