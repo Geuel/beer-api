@@ -42,6 +42,7 @@ public class BeerService {
     }
 
     public BeerDTO insert(BeerDTO beerDTO) throws BeerAlreadyRegisteredException {
+        verifyIfAlreadyExists(beerDTO.getName());
         Beer beerToSave = beerMapper.toModel(beerDTO);
         Beer savedBeer = beerRepository.save(beerToSave);
         return beerMapper.toDTO(savedBeer);
@@ -63,7 +64,10 @@ public class BeerService {
         return beerRepository.findById(id)
                 .orElseThrow(() -> new BeerNotFoundException(id));
     }
-
-
-
+    private void verifyIfAlreadyExists(String name) throws BeerAlreadyRegisteredException {
+        Optional<Beer> optSavedBeer = beerRepository.findByName(name);
+        if(optSavedBeer.isPresent()) {
+            throw new BeerAlreadyRegisteredException(name);
+        }
+    }
 }
