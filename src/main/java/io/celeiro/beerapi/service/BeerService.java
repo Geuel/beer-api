@@ -25,4 +25,10 @@ public class BeerService {
              .map(beerMapper::toDTO)
              .collect(Collectors.toList());
     }
+
+    public BeerDTO insert(BeerDTO beerDTO) {
+        Beer beerToSave = beerMapper.toModel(beerDTO);
+        Beer savedBeer = beerRepository.save(beerToSave);
+        return beerMapper.toDTO(savedBeer);
+    }
 }

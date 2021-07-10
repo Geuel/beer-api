@@ -4,10 +4,10 @@ import io.celeiro.beerapi.dto.BeerDTO;
 import io.celeiro.beerapi.service.BeerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,5 +20,11 @@ public class BeerController {
     @GetMapping
     public List<BeerDTO> listAll() {
         return beerService.listAll();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BeerDTO insert(@RequestBody @Valid BeerDTO beerDTO) {
+        return beerService.insert(beerDTO);
     }
 }
