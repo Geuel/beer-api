@@ -33,4 +33,15 @@ public class BeerController {
     public BeerDTO insert(@RequestBody @Valid BeerDTO beerDTO) {
         return beerService.insert(beerDTO);
     }
+
+    @PutMapping("/{id}")
+    public BeerDTO update(@PathVariable Long id, @RequestBody BeerDTO beerDTO) throws BeerNotFoundException {
+        return beerService.update(id, beerDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) throws BeerNotFoundException {
+        beerService.delete(id);
+    }
 }

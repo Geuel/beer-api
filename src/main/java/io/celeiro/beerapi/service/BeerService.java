@@ -40,8 +40,23 @@ public class BeerService {
         return beerMapper.toDTO(savedBeer);
     }
 
+    public BeerDTO update(Long id, BeerDTO beerDTO) throws BeerNotFoundException {
+        verifyIfExists(id);
+        Beer beerToSave = beerMapper.toModel(beerDTO);
+        Beer savedBeer = beerRepository.save(beerToSave);
+        return beerMapper.toDTO(savedBeer);
+    }
+
+    public void delete(Long id) throws BeerNotFoundException {
+        verifyIfExists(id);
+        beerRepository.deleteById(id);
+    }
+
     private Beer verifyIfExists(Long id) throws BeerNotFoundException {
         return beerRepository.findById(id)
                 .orElseThrow(() -> new BeerNotFoundException(id));
     }
+
+
+
 }
