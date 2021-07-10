@@ -34,6 +34,12 @@ public class BeerService {
         return beerMapper.toDTO(beer);
     }
 
+    public BeerDTO findByName(String name) throws BeerNotFoundException {
+        Beer foundBeer = beerRepository.findByName(name)
+                .orElseThrow(() -> new BeerNotFoundException(name));
+        return beerMapper.toDTO(foundBeer);
+    }
+
     public BeerDTO insert(BeerDTO beerDTO) {
         Beer beerToSave = beerMapper.toModel(beerDTO);
         Beer savedBeer = beerRepository.save(beerToSave);

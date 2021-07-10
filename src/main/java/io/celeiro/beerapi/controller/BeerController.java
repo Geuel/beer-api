@@ -23,9 +23,14 @@ public class BeerController {
         return beerService.listAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public BeerDTO findById(@PathVariable Long id) throws BeerNotFoundException {
         return beerService.findById(id);
+    }
+
+    @GetMapping("/name/{name}")
+    public BeerDTO findByName(@PathVariable String name) throws BeerNotFoundException {
+        return beerService.findByName(name);
     }
 
     @PostMapping
