@@ -108,8 +108,7 @@ public class BeerControllerTest {
 
         //Then
         mockMvc.perform(get(BEER_API_URL_PATH_CONSULT_NAME + "/" + beerDTO.getName())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(beerDTO)))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 }
