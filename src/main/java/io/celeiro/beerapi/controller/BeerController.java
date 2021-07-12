@@ -1,8 +1,10 @@
 package io.celeiro.beerapi.controller;
 
 import io.celeiro.beerapi.dto.BeerDTO;
+import io.celeiro.beerapi.dto.QuantityDTO;
 import io.celeiro.beerapi.exception.BeerAlreadyRegisteredException;
 import io.celeiro.beerapi.exception.BeerNotFoundException;
+import io.celeiro.beerapi.exception.BeerStockExceededException;
 import io.celeiro.beerapi.service.BeerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,11 @@ public class BeerController {
     @PutMapping("/{id}")
     public BeerDTO update(@PathVariable Long id, @RequestBody BeerDTO beerDTO) throws BeerNotFoundException {
         return beerService.update(id, beerDTO);
+    }
+
+    @PatchMapping("/{id}/increment")
+    public BeerDTO increment(@PathVariable Long id, @RequestBody @Valid QuantityDTO quantityDTO) throws BeerNotFoundException, BeerStockExceededException {
+        return beerService.increment(id, quantityDTO.getQuantity());
     }
 
     @DeleteMapping("/{id}")

@@ -4,6 +4,7 @@ import io.celeiro.beerapi.dto.BeerDTO;
 import io.celeiro.beerapi.entities.Beer;
 import io.celeiro.beerapi.exception.BeerAlreadyRegisteredException;
 import io.celeiro.beerapi.exception.BeerNotFoundException;
+import io.celeiro.beerapi.exception.BeerStockExceededException;
 import io.celeiro.beerapi.mapper.BeerMapper;
 import io.celeiro.beerapi.repositories.BeerRepository;
 import lombok.AllArgsConstructor;
@@ -69,5 +70,16 @@ public class BeerService {
         if(optSavedBeer.isPresent()) {
             throw new BeerAlreadyRegisteredException(name);
         }
+    }
+
+    public BeerDTO increment(Long id, int quantityToIncrement) throws BeerNotFoundException, BeerStockExceededException {
+        Beer beerToIncrementStock = verifyIfExists(id);
+        int quantityAfterIncrement = quantityToIncrement + beerToIncrementStock.getQuantity();
+        if (quantityAfterIncrement <= beerToIncrementStock.getMax()) {
+            beerToIncrementStock.setQuantity(beerToIncrementStock.getQuantity() + quantityToIncrement);
+            Beer incrementedBeerStock = beerRepository.save(beerToIncrementStock);
+            return beerMapper.toDTO(incrementedBeerStock);
+        }
+        throw new BeerStockExceededException(id, quantityToIncrement);
     }
 }
