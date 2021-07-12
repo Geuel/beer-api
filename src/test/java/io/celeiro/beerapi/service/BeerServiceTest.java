@@ -4,6 +4,7 @@ import io.celeiro.beerapi.builder.BeerDTOBuilder;
 import io.celeiro.beerapi.dto.BeerDTO;
 import io.celeiro.beerapi.entities.Beer;
 import io.celeiro.beerapi.exception.BeerAlreadyRegisteredException;
+import io.celeiro.beerapi.exception.BeerNotFoundException;
 import io.celeiro.beerapi.mapper.BeerMapper;
 import io.celeiro.beerapi.repositories.BeerRepository;
 import org.hamcrest.MatcherAssert;
@@ -65,5 +66,20 @@ public class BeerServiceTest {
 
         //then
         assertThrows(BeerAlreadyRegisteredException.class, () -> beerService.insert(expectedBeerDTO)); ;
+    }
+
+    @Test
+    void whenValidBeerNameIsGivenThenReturnABeer() throws BeerNotFoundException {
+        //given
+        BeerDTO expectedFoundBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedFoundBeer =  beerMapper.toModel(expectedFoundBeerDTO);
+
+        //when
+        when(beerRepository.findByName(expectedFoundBeer.getName())).thenReturn(Optional.of(expectedFoundBeer));
+
+        //then
+        BeerDTO foundBeerDTO = beerService.findByName(expectedFoundBeerDTO.getName());
+
+        assertThat(foundBeerDTO, is(equalTo(expectedFoundBeerDTO)));
     }
 }
