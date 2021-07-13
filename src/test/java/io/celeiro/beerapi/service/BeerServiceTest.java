@@ -136,4 +136,13 @@ public class BeerServiceTest {
         verify(beerRepository, times(1)).findById(expectedDeletedBeerDTO.getId());
         verify(beerRepository, times(1)).deleteById(expectedDeletedBeerDTO.getId());
     }
+
+    @Test
+    void whenExclusionIsCalledWithInvalidIdThenExceptionShouldBeThrown() {
+        //when
+        when(beerRepository.findById(INVALID_BEER_ID)).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(BeerNotFoundException.class, () -> beerService.delete(INVALID_BEER_ID));
+    }
 }
