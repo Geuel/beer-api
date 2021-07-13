@@ -20,7 +20,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BeerServiceTest {
@@ -118,5 +118,22 @@ public class BeerServiceTest {
         List<BeerDTO> foundBeersDTO  = beerService.listAll();
 
         assertThat(foundBeersDTO, is(empty()));
+    }
+
+    @Test
+    void whenExclusionIsCalledWithAValidIdThenShouldBeDeleted() throws BeerNotFoundException {
+        //given
+        BeerDTO expectedDeletedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+        Beer expectedDeletedBeer =  beerMapper.toModel(expectedDeletedBeerDTO);
+
+        //when
+        when(beerRepository.findById(expectedDeletedBeer.getId())).thenReturn(Optional.of(expectedDeletedBeer));
+        doNothing().when(beerRepository).deleteById(expectedDeletedBeer.getId());
+
+        //then
+        beerService.delete(expectedDeletedBeerDTO.getId());
+
+        verify(beerRepository, times(1)).findById(expectedDeletedBeerDTO.getId());
+        verify(beerRepository, times(1)).deleteById(expectedDeletedBeerDTO.getId());
     }
 }
